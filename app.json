@@ -1,11 +1,12 @@
 {
   "expo": {
-    "name": "mm",
+    "name": "MM",
+    "displayName": "MM",
     "slug": "mm",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
-    "scheme": "myapp",
+    "scheme": "mm",
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
     "ios": {

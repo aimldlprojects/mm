@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
+import { View, Text, StyleSheet } from 'react-native';
 import { Dropdown } from 'react-native-element-dropdown';
 
 interface User {
@@ -22,16 +22,20 @@ const UserDropdown: React.FC = () => {
 
     return (
         <View style={styles.dropdownContainer}>
-            <Text style={styles.label}>User:</Text>
-            <Dropdown
-                data={users}
-                value={selectedUser?.value}
-                onChange={handleUserSelect}
-                placeholder="Select User"
-                containerStyle={styles.dropdown}
-                labelField="label"
-                valueField="value"
-            />
+            <View style={{ flexDirection: 'row', alignItems: 'center', maxHeight: 30, justifyContent: 'flex-start' }}>
+                <Text style={styles.selectedUserText}>
+                    {selectedUser ? `User:            ${selectedUser.label}` : 'User: Select User'}
+                </Text>
+                <Dropdown
+                    data={users}
+                    value={selectedUser?.value}
+                    onChange={handleUserSelect}
+                    placeholder="Select User"
+                    containerStyle={[styles.dropdown, { flex: 1, minWidth: 100, maxHeight: 200, alignSelf: 'flex-start', marginLeft: -70 }]}
+                    labelField="label"
+                    valueField="value"
+                />
+            </View>
         </View>
     );
 };
@@ -39,15 +43,18 @@ const UserDropdown: React.FC = () => {
 const styles = StyleSheet.create({
     dropdownContainer: {
         marginBottom: 10,
-    },
-    label: {
-        marginBottom: 5,
+        marginLeft: 60,
     },
     dropdown: {
         borderWidth: 1,
         borderColor: '#ccc',
         borderRadius: 5,
         padding: 5,
+    },
+    selectedUserText: {
+        fontSize: 18,
+        color: '#333',
+        marginRight: 10,
     },
 });
 

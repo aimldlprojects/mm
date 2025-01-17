@@ -6,6 +6,7 @@ import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import appConfig from '../app.json'; // Import app.json
 import { RootStackParamList } from '../types'; // Import types
+import { FontAwesome } from '@expo/vector-icons'; // Import icons
 
 type HomeScreenNavigationProp = NativeStackNavigationProp<RootStackParamList, 'Home'>;
 
@@ -21,10 +22,15 @@ const HomeScreen: React.FC = () => {
     return (
         <View style={styles.container}>
             <Text style={styles.title}>{appConfig.expo.name} - Mental Math</Text> {/* Use appConfig.expo.name */}
-            <UserDropdown />
-            <TestTypeDropdown />
+            <View style={styles.dropdownContainer}>
+                <UserDropdown style={styles.dropdown} />
+            </View>
+            <View style={styles.dropdownContainer}>
+                <TestTypeDropdown style={styles.dropdown} />
+            </View>
             <TouchableOpacity style={styles.button} onPress={handleStartPress}>
                 <Text style={styles.buttonText}>Start</Text>
+                <FontAwesome name="arrow-right" size={20} color="white" />
             </TouchableOpacity>
         </View>
     );
@@ -36,21 +42,46 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         alignItems: 'center',
         padding: 20,
+        backgroundColor: '#f0f8ff', // Light background color
     },
     title: {
-        fontSize: 24,
+        fontSize: 28,
         fontWeight: 'bold',
+        color: '#333',
+        marginBottom: 30,
+    },
+    dropdownContainer: {
+        flexDirection: 'row',
+        alignItems: 'center',
         marginBottom: 20,
+        width: '80%',
+    },
+    label: {
+        fontSize: 18,
+        fontWeight: 'bold',
+        color: '#333',
+        marginRight: 10,
+    },
+    dropdown: {
+        flex: 1,
+        backgroundColor: '#fff',
+        borderColor: '#ccc',
+        borderWidth: 1,
+        borderRadius: 5,
+        padding: 10,
     },
     button: {
-        backgroundColor: 'blue',
-        padding: 10,
+        flexDirection: 'row',
+        alignItems: 'center',
+        backgroundColor: '#007bff',
+        padding: 15,
         borderRadius: 5,
-        marginTop: 20,
+        marginTop: 30,
     },
     buttonText: {
         color: 'white',
         fontWeight: 'bold',
+        marginRight: 10,
     },
 });
 

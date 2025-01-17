@@ -15,4 +15,5 @@ const RootNavigator: React.FC = () => {
     );
 };
 
+
 export default RootNavigator;

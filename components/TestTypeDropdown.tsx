@@ -1,10 +1,15 @@
 import React, { useState } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
+import { View, Text, StyleSheet } from 'react-native';
 import { Dropdown } from 'react-native-element-dropdown';
 
 interface TestType {
     value: string;
     label: string;
+}
+
+interface TestTypeDropdownProps {
+    onSelect: (value: string) => void;
+    style?: object;
 }
 
 const testTypes: TestType[] = [
@@ -15,18 +20,19 @@ const testTypes: TestType[] = [
     { value: 'Divisions', label: 'Divisions' },
 ];
 
-const TestTypeDropdown: React.FC = () => {
+const TestTypeDropdown: React.FC<TestTypeDropdownProps> = ({ onSelect, style }) => {
     const [selectedTestType, setSelectedTestType] = useState<TestType | null>(null);
 
     const handleTestTypeSelect = (item: TestType) => {
         setSelectedTestType(item);
+        onSelect(item.value);
     };
 
     return (
-        <View style={styles.dropdownContainer}>
+        <View style={[styles.dropdownContainer, style]}>
             <View style={{ flexDirection: 'row', alignItems: 'center', maxHeight: 30, justifyContent: 'flex-start' }}>
                 <Text style={styles.selectedTestTypeText}>
-                    {selectedTestType ? `Test Type:   ${selectedTestType.label}` : 'Test Type: Select Test Type'}
+                    {selectedTestType ? `${selectedTestType.label}` : 'Select Test Type'}
                 </Text>
                 <Dropdown
                     data={testTypes}
@@ -53,7 +59,6 @@ const styles = StyleSheet.create({
         borderRadius: 5,
         padding: 5,
     },
-
     selectedTestTypeText: {
         fontSize: 18,
         color: '#333',

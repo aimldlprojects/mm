@@ -1,8 +1,14 @@
 import React, { useState } from 'react';
 import { View, Text, StyleSheet, TextInput, TouchableOpacity } from 'react-native';
-import appConfig from '../app.json'; // Import app.json
+import { RouteProp, useRoute } from '@react-navigation/native';
+import { RootStackParamList } from '../types'; // Import types
+
+type QuestionScreenRouteProp = RouteProp<RootStackParamList, 'QuestionScreen'>;
 
 const QuestionScreen: React.FC = () => {
+    const route = useRoute<QuestionScreenRouteProp>();
+    const { testType } = route.params;
+
     const [num1, setNum1] = useState(Math.floor(Math.random() * 10) + 1);
     const [num2, setNum2] = useState(Math.floor(Math.random() * 10) + 1);
     const [userAnswer, setUserAnswer] = useState('');
@@ -14,7 +20,27 @@ const QuestionScreen: React.FC = () => {
         setTotalAttempted(totalAttempted + 1);
 
         // Calculate correct answer based on selected test type
-        let correctAnswer = num1 + num2; // Example logic for addition
+        let correctAnswer;
+        switch (testType) {
+            case 'Additions':
+                correctAnswer = num1 + num2;
+                break;
+            case 'Subtractions':
+                correctAnswer = num1 - num2;
+                break;
+            case 'Multiplications':
+                correctAnswer = num1 * num2;
+                break;
+            case 'Divisions':
+                correctAnswer = num1 / num2;
+                break;
+            case 'Tables':
+                correctAnswer = num1 * num2;
+                break;
+            default:
+                correctAnswer = num1 + num2; // Default to addition
+                break;
+        }
 
         if (userAnswer === correctAnswer.toString()) {
             setScore(score + 1);
@@ -47,7 +73,7 @@ const QuestionScreen: React.FC = () => {
     return (
         <View style={styles.container}>
             <Text style={styles.question}>
-                {num1} + {num2} = ?
+                {num1} {testType === 'Additions' ? '+' : testType === 'Subtractions' ? '-' : testType === 'Multiplications' ? 'x' : testType === 'Divisions' ? '/' : testType === 'Tables' ? 'x' : '+'} {num2} = ?
             </Text>
             <TextInput
                 style={styles.input}

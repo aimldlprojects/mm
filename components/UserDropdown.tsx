@@ -7,24 +7,30 @@ interface User {
     label: string;
 }
 
+interface UserDropdownProps {
+    onSelect: (value: string) => void;
+    style?: object;
+}
+
 const users: User[] = [
     { value: 'Bhavi', label: 'Bhavi' },
     { value: 'Madhu', label: 'Madhu' },
     { value: 'User', label: 'User' },
 ];
 
-const UserDropdown: React.FC = () => {
+const UserDropdown: React.FC<UserDropdownProps> = ({ onSelect, style }) => {
     const [selectedUser, setSelectedUser] = useState<User | null>(null);
 
     const handleUserSelect = (item: User) => {
         setSelectedUser(item);
+        onSelect(item.value);
     };
 
     return (
-        <View style={styles.dropdownContainer}>
+        <View style={[styles.dropdownContainer, style]}>
             <View style={{ flexDirection: 'row', alignItems: 'center', maxHeight: 30, justifyContent: 'flex-start' }}>
                 <Text style={styles.selectedUserText}>
-                    {selectedUser ? `User:            ${selectedUser.label}` : 'User: Select User'}
+                    {selectedUser ? `${selectedUser.label}` : 'Select User'}
                 </Text>
                 <Dropdown
                     data={users}

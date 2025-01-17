@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import UserDropdown from '../components/UserDropdown';
 import TestTypeDropdown from '../components/TestTypeDropdown';
@@ -12,21 +12,27 @@ type HomeScreenNavigationProp = NativeStackNavigationProp<RootStackParamList, 'H
 
 const HomeScreen: React.FC = () => {
     const navigation = useNavigation<HomeScreenNavigationProp>();
+    const [selectedTestType, setSelectedTestType] = useState<string | null>(null);
+    const [selectedUser, setSelectedUser] = useState<string | null>(null);
 
     const handleStartPress = () => {
-        // Check if user and test type are selected
-        // If selected, navigate to the QuestionScreen
-        navigation.navigate('QuestionScreen'); // Ensure the name matches the registered screen name
+        if (selectedTestType) {
+            navigation.navigate('QuestionScreen', { testType: selectedTestType });
+        } else {
+            alert('Please select a test type');
+        }
     };
 
     return (
         <View style={styles.container}>
             <Text style={styles.title}>{appConfig.expo.name} - Mental Math</Text> {/* Use appConfig.expo.name */}
             <View style={styles.dropdownContainer}>
-                <UserDropdown style={styles.dropdown} />
+                <Text style={styles.label}>User:</Text>
+                <UserDropdown style={styles.dropdown} onSelect={setSelectedUser} />
             </View>
             <View style={styles.dropdownContainer}>
-                <TestTypeDropdown style={styles.dropdown} />
+                <Text style={styles.label}>Test Type:</Text>
+                <TestTypeDropdown style={styles.dropdown} onSelect={setSelectedTestType} />
             </View>
             <TouchableOpacity style={styles.button} onPress={handleStartPress}>
                 <Text style={styles.buttonText}>Start</Text>

@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, Text, StyleSheet, TextInput, TouchableOpacity } from 'react-native';
+import { View, Text, StyleSheet, TextInput, TouchableOpacity, Alert } from 'react-native';
 import { RouteProp, useRoute } from '@react-navigation/native';
 import { RootStackParamList } from '../types'; // Import types
 
@@ -9,12 +9,15 @@ const QuestionScreen: React.FC = () => {
     const route = useRoute<QuestionScreenRouteProp>();
     const { testType } = route.params;
 
-    const [num1, setNum1] = useState(Math.floor(Math.random() * 10) + 1);
-    const [num2, setNum2] = useState(Math.floor(Math.random() * 10) + 1);
+    const firstNumber = 20;
+    const secondNumber = 10;
+
+    const [num1, setNum1] = useState(Math.floor(Math.random() * firstNumber) + 1);
+    const [num2, setNum2] = useState(Math.floor(Math.random() * secondNumber) + 1);
     const [userAnswer, setUserAnswer] = useState('');
     const [score, setScore] = useState(0);
     const [totalAttempted, setTotalAttempted] = useState(0);
-    const [answeredQuestions, setAnsweredQuestions] = useState<number[]>([]);
+    const [answeredQuestions, setAnsweredQuestions] = useState<string[]>([]);
 
     const handleAnswerSubmit = () => {
         setTotalAttempted(totalAttempted + 1);
@@ -47,18 +50,23 @@ const QuestionScreen: React.FC = () => {
         }
 
         // Generate new random numbers and avoid previously asked questions
-        let newNum1, newNum2;
+        let newNum1, newNum2, newQuestionId;
+        const maxQuestions = firstNumber * secondNumber;
+
+        if (answeredQuestions.length >= maxQuestions) {
+            Alert.alert('Congratulations! 🎉', 'You have completed the test. Great job! Keep up the good work! 💪');
+            return;
+        }
+
         do {
-            newNum1 = Math.floor(Math.random() * 10) + 1;
-            newNum2 = Math.floor(Math.random() * 10) + 1;
-        } while (
-            answeredQuestions.includes(newNum1 * 10 + newNum2) ||
-            answeredQuestions.includes(newNum2 * 10 + newNum1)
-        );
+            newNum1 = Math.floor(Math.random() * firstNumber) + 1;
+            newNum2 = Math.floor(Math.random() * secondNumber) + 1;
+            newQuestionId = `${newNum1}${newNum2}`;
+        } while (answeredQuestions.includes(newQuestionId));
 
         setNum1(newNum1);
         setNum2(newNum2);
-        setAnsweredQuestions([...answeredQuestions, newNum1 * 10 + newNum2]);
+        setAnsweredQuestions([...answeredQuestions, newQuestionId]);
         setUserAnswer('');
     };
 
@@ -66,14 +74,22 @@ const QuestionScreen: React.FC = () => {
         setScore(0);
         setTotalAttempted(0);
         setAnsweredQuestions([]);
-        setNum1(Math.floor(Math.random() * 10) + 1);
-        setNum2(Math.floor(Math.random() * 10) + 1);
+        setNum1(Math.floor(Math.random() * firstNumber) + 1);
+        setNum2(Math.floor(Math.random() * secondNumber) + 1);
+    };
+
+    const operatorMap: { [key: string]: string } = {
+        Additions: '+',
+        Subtractions: '-',
+        Multiplications: 'x',
+        Divisions: '/',
+        Tables: 'x',
     };
 
     return (
         <View style={styles.container}>
             <Text style={styles.question}>
-                {num1} {testType === 'Additions' ? '+' : testType === 'Subtractions' ? '-' : testType === 'Multiplications' ? 'x' : testType === 'Divisions' ? '/' : testType === 'Tables' ? 'x' : '+'} {num2} = ?
+                {num1} {operatorMap[testType] || '+'} {num2} = ?
             </Text>
             <TextInput
                 style={styles.input}

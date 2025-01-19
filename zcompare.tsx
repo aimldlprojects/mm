@@ -1,69 +1,143 @@
 import React, { useState } from 'react';
-import { View, Text, StyleSheet } from 'react-native';
-import { Dropdown } from 'react-native-element-dropdown';
+import { View, Text, StyleSheet, TextInput, TouchableOpacity } from 'react-native';
+import { RouteProp, useRoute } from '@react-navigation/native';
+import { RootStackParamList } from '../types'; // Import types
 
-interface TestType {
-    value: string;
-    label: string;
-}
+type QuestionScreenRouteProp = RouteProp<RootStackParamList, 'QuestionScreen'>;
 
-interface TestTypeDropdownProps {
-    onSelect: (value: string) => void;
-    style?: object;
-}
+const QuestionScreen: React.FC = () => {
+    const route = useRoute<QuestionScreenRouteProp>();
+    const { testType } = route.params;
 
-const testTypes: TestType[] = [
-    { value: 'Tables', label: 'Tables' },
-    { value: 'Additions', label: 'Additions' },
-    { value: 'Subtractions', label: 'Subtractions' },
-    { value: 'Multiplications', label: 'Multiplications' },
-    { value: 'Divisions', label: 'Divisions' },
-];
+    const firstNumber = 20;
+    const secondNumber = 10;
 
-const TestTypeDropdown: React.FC<TestTypeDropdownProps> = ({ onSelect, style }) => {
-    const [selectedTestType, setSelectedTestType] = useState<TestType | null>(null);
+    const [num1, setNum1] = useState(Math.floor(Math.random() * firstNumber) + 1);
+    const [num2, setNum2] = useState(Math.floor(Math.random() * secondNumber) + 1);
+    const [userAnswer, setUserAnswer] = useState('');
+    const [score, setScore] = useState(0);
+    const [totalAttempted, setTotalAttempted] = useState(0);
+    const [answeredQuestions, setAnsweredQuestions] = useState<string[]>([]);
 
-    const handleTestTypeSelect = (item: TestType) => {
-        setSelectedTestType(item);
-        onSelect(item.value);
+    const handleAnswerSubmit = () => {
+        setTotalAttempted(totalAttempted + 1);
+
+        // Calculate correct answer based on selected test type
+        let correctAnswer;
+        switch (testType) {
+            case 'Additions':
+                correctAnswer = num1 + num2;
+                break;
+            case 'Subtractions':
+                correctAnswer = num1 - num2;
+                break;
+            case 'Multiplications':
+                correctAnswer = num1 * num2;
+                break;
+            case 'Divisions':
+                correctAnswer = num1 / num2;
+                break;
+            case 'Tables':
+                correctAnswer = num1 * num2;
+                break;
+            default:
+                correctAnswer = num1 + num2; // Default to addition
+                break;
+        }
+
+        if (userAnswer === correctAnswer.toString()) {
+            setScore(score + 1);
+        }
+
+        // Generate new random numbers and avoid previously asked questions
+        let newNum1, newNum2, newQuestionId;
+        do {
+            newNum1 = Math.floor(Math.random() * firstNumber) + 1;
+            newNum2 = Math.floor(Math.random() * secondNumber) + 1;
+            newQuestionId = `${newNum1}${newNum2}`;
+        } while (answeredQuestions.includes(newQuestionId));
+
+        setNum1(newNum1);
+        setNum2(newNum2);
+        setAnsweredQuestions([...answeredQuestions, newQuestionId]);
+        setUserAnswer('');
+    };
+
+    const handleReset = () => {
+        setScore(0);
+        setTotalAttempted(0);
+        setAnsweredQuestions([]);
+        setNum1(Math.floor(Math.random() * firstNumber) + 1);
+        setNum2(Math.floor(Math.random() * secondNumber) + 1);
+    };
+
+    const operatorMap: { [key: string]: string } = {
+        Additions: '+',
+        Subtractions: '-',
+        Multiplications: 'x',
+        Divisions: '/',
+        Tables: 'x',
     };
 
     return (
-        <View style={[styles.dropdownContainer, style]}>
-            <View style={{ flexDirection: 'row', alignItems: 'center', maxHeight: 30, justifyContent: 'flex-start' }}>
-                <Text style={styles.selectedTestTypeText}>
-                    {selectedTestType ? `Test Type:   ${selectedTestType.label}` : 'Test Type: Select Test Type'}
-                </Text>
-                <Dropdown
-                    data={testTypes}
-                    value={selectedTestType?.value}
-                    onChange={handleTestTypeSelect}
-                    placeholder="Select Test Type"
-                    containerStyle={[styles.dropdown, { flex: 1, minWidth: 180, maxHeight: 300, alignSelf: 'flex-start', marginLeft: -150 }]}
-                    labelField="label"
-                    valueField="value"
-                />
-            </View>
+        <View style={styles.container}>
+            <Text style={styles.question}>
+                {num1} {operatorMap[testType] || '+'} {num2} = ?
+            </Text>
+            <TextInput
+                style={styles.input}
+                value={userAnswer}
+                onChangeText={setUserAnswer}
+                keyboardType="numeric"
+            />
+            <TouchableOpacity style={styles.button} onPress={handleAnswerSubmit}>
+                <Text style={styles.buttonText}>Submit</Text>
+            </TouchableOpacity>
+            <Text style={styles.score}>
+                Score: {score}/{totalAttempted}
+            </Text>
+            <TouchableOpacity style={styles.button} onPress={handleReset}>
+                <Text style={styles.buttonText}>Reset</Text>
+            </TouchableOpacity>
         </View>
     );
 };
 
 const styles = StyleSheet.create({
-    dropdownContainer: {
-        marginBottom: 10,
-        marginLeft: 60,
+    container: {
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+        padding: 20,
     },
-    dropdown: {
+    question: {
+        fontSize: 24,
+        fontWeight: 'bold',
+        marginBottom: 20,
+    },
+    input: {
+        height: 40,
+        borderColor: 'gray',
         borderWidth: 1,
-        borderColor: '#ccc',
-        borderRadius: 5,
-        padding: 5,
+        marginBottom: 20,
+        paddingHorizontal: 10,
+        width: '80%',
     },
-    selectedTestTypeText: {
+    button: {
+        backgroundColor: 'blue',
+        padding: 10,
+        borderRadius: 5,
+        marginTop: 20,
+    },
+    buttonText: {
+        color: 'white',
+        fontWeight: 'bold',
+    },
+    score: {
         fontSize: 18,
-        color: '#333',
-        marginRight: 10,
+        fontWeight: 'bold',
+        marginTop: 20,
     },
 });
 
-export default TestTypeDropdown;
+export default QuestionScreen;

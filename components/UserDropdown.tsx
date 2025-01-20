@@ -49,7 +49,7 @@ const UserDropdown: React.FC<UserDropdownProps> = ({ onSelect, style }) => {
 const styles = StyleSheet.create({
     dropdownContainer: {
         marginBottom: 10,
-        marginLeft: 60,
+        marginLeft: 10,
     },
     dropdown: {
         borderWidth: 1,

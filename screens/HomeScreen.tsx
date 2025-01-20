@@ -25,9 +25,9 @@ const HomeScreen: React.FC = () => {
 
     return (
         <View style={styles.container}>
-            <Text style={styles.title}>{appConfig.expo.name} - Mental Math</Text> {/* Use appConfig.expo.name */}
+            <Text style={styles.title}>{appConfig.expo.name} - Mental Math</Text>
             <View style={styles.dropdownContainer}>
-                <Text style={styles.label}>User:</Text>
+                <Text style={styles.label}>User:         </Text>
                 <UserDropdown style={styles.dropdown} onSelect={setSelectedUser} />
             </View>
             <View style={styles.dropdownContainer}>
@@ -47,7 +47,7 @@ const styles = StyleSheet.create({
         flex: 1,
         justifyContent: 'center',
         alignItems: 'center',
-        padding: 20,
+        padding: 10,
         backgroundColor: '#f0f8ff', // Light background color
     },
     title: {
@@ -60,13 +60,13 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         alignItems: 'center',
         marginBottom: 20,
-        width: '80%',
+        width: '90%',
     },
     label: {
         fontSize: 18,
         fontWeight: 'bold',
         color: '#333',
-        marginRight: 10,
+        marginRight: 1,
     },
     dropdown: {
         flex: 1,

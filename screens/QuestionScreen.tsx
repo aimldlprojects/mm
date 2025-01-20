@@ -18,8 +18,6 @@ const QuestionScreen: React.FC = () => {
     const [score, setScore] = useState(0);
     const [totalAttempted, setTotalAttempted] = useState(0);
     const [answeredQuestions, setAnsweredQuestions] = useState<string[]>([]);
-    console.log('num1', num1);
-    console.log('num2', num2);
 
     const handleAnswerSubmit = () => {
         setTotalAttempted(totalAttempted + 1);

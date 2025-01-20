@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { View, Text, StyleSheet, TextInput, TouchableOpacity, Alert } from 'react-native';
 import { RouteProp, useRoute } from '@react-navigation/native';
 import { RootStackParamList } from '../types'; // Import types
@@ -18,6 +18,8 @@ const QuestionScreen: React.FC = () => {
     const [score, setScore] = useState(0);
     const [totalAttempted, setTotalAttempted] = useState(0);
     const [answeredQuestions, setAnsweredQuestions] = useState<string[]>([]);
+    console.log('num1', num1);
+    console.log('num2', num2);
 
     const handleAnswerSubmit = () => {
         setTotalAttempted(totalAttempted + 1);
@@ -47,9 +49,12 @@ const QuestionScreen: React.FC = () => {
 
         if (userAnswer === correctAnswer.toString()) {
             setScore(score + 1);
+            setAnsweredQuestions([...answeredQuestions, `${num1}${num2}`]);
         }
 
-        // Generate new random numbers and avoid previously asked questions
+    };
+
+    useEffect(() => {
         let newNum1, newNum2, newQuestionId;
         const maxQuestions = firstNumber * secondNumber;
 
@@ -66,9 +71,8 @@ const QuestionScreen: React.FC = () => {
 
         setNum1(newNum1);
         setNum2(newNum2);
-        setAnsweredQuestions([...answeredQuestions, newQuestionId]);
         setUserAnswer('');
-    };
+    }, [answeredQuestions]);
 
     const handleReset = () => {
         setScore(0);

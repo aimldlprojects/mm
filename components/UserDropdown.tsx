@@ -60,7 +60,7 @@ const styles = StyleSheet.create({
     selectedUserText: {
         fontSize: 18,
         color: '#333',
-        marginRight: 10,
+        marginRight: 120,
     },
 });
 

@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, Text, StyleSheet } from 'react-native';
+import { View, StyleSheet } from 'react-native';
 import { Dropdown } from 'react-native-element-dropdown';
 
 interface User {
@@ -19,29 +19,24 @@ const users: User[] = [
 ];
 
 const UserDropdown: React.FC<UserDropdownProps> = ({ onSelect, style }) => {
-    const [selectedUser, setSelectedUser] = useState<User | null>(null);
+    const [selectedUser, setSelectedUser] = useState<string | null>(null);
 
     const handleUserSelect = (item: User) => {
-        setSelectedUser(item);
+        setSelectedUser(item.value);
         onSelect(item.value);
     };
 
     return (
         <View style={[styles.dropdownContainer, style]}>
-            <View style={{ flexDirection: 'row', alignItems: 'center', maxHeight: 30, justifyContent: 'flex-start' }}>
-                <Text style={styles.selectedUserText}>
-                    {selectedUser ? `${selectedUser.label}` : 'Select User'}
-                </Text>
-                <Dropdown
-                    data={users}
-                    value={selectedUser?.value}
-                    onChange={handleUserSelect}
-                    placeholder="Select User"
-                    containerStyle={[styles.dropdown, { flex: 1, minWidth: 100, maxHeight: 200, alignSelf: 'flex-start', marginLeft: -70 }]}
-                    labelField="label"
-                    valueField="value"
-                />
-            </View>
+            <Dropdown
+                data={users}
+                value={setSelectedUser}
+                onChange={handleUserSelect}
+                placeholder="Select User"
+                containerStyle={styles.dropdown}
+                labelField="label"
+                valueField="value"
+            />
         </View>
     );
 };
@@ -56,11 +51,8 @@ const styles = StyleSheet.create({
         borderColor: '#ccc',
         borderRadius: 5,
         padding: 5,
-    },
-    selectedUserText: {
-        fontSize: 18,
-        color: '#333',
-        marginRight: 120,
+        width: 200,
+        maxHeight: 200,
     },
 });
 

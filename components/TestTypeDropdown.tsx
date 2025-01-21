@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, Text, StyleSheet } from 'react-native';
+import { View, StyleSheet } from 'react-native';
 import { Dropdown } from 'react-native-element-dropdown';
 
 interface TestType {
@@ -21,29 +21,24 @@ const testTypes: TestType[] = [
 ];
 
 const TestTypeDropdown: React.FC<TestTypeDropdownProps> = ({ onSelect, style }) => {
-    const [selectedTestType, setSelectedTestType] = useState<TestType | null>(null);
+    const [selectedTestType, setSelectedTestType] = useState<string | null>(null);
 
     const handleTestTypeSelect = (item: TestType) => {
-        setSelectedTestType(item);
+        setSelectedTestType(item.value);
         onSelect(item.value);
     };
 
     return (
         <View style={[styles.dropdownContainer, style]}>
-            <View style={{ flexDirection: 'row', alignItems: 'center', maxHeight: 30, justifyContent: 'flex-start' }}>
-                <Text style={styles.selectedTestTypeText}>
-                    {selectedTestType ? `${selectedTestType.label}` : 'Select Test Type'}
-                </Text>
-                <Dropdown
-                    data={testTypes}
-                    value={selectedTestType?.value}
-                    onChange={handleTestTypeSelect}
-                    placeholder="Select Test Type"
-                    containerStyle={[styles.dropdown, { flex: 1, minWidth: 180, maxHeight: 300, alignSelf: 'flex-start', marginLeft: -150 }]}
-                    labelField="label"
-                    valueField="value"
-                />
-            </View>
+            <Dropdown
+                data={testTypes}
+                value={selectedTestType}
+                onChange={handleTestTypeSelect}
+                placeholder="Select Test Type"
+                containerStyle={styles.dropdown}
+                labelField="label"
+                valueField="value"
+            />
         </View>
     );
 };
@@ -58,11 +53,8 @@ const styles = StyleSheet.create({
         borderColor: '#ccc',
         borderRadius: 5,
         padding: 5,
-    },
-    selectedTestTypeText: {
-        fontSize: 18,
-        color: '#333',
-        marginRight: 75,
+        width: 200,
+        maxHeight: 300,
     },
 });
 

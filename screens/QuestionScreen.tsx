@@ -98,6 +98,10 @@ const QuestionScreen: React.FC = () => {
                 value={userAnswer}
                 onChangeText={setUserAnswer}
                 keyboardType="numeric"
+                returnKeyType="done"
+                onSubmitEditing={() => {
+                    handleAnswerSubmit(); // Handle Enter key press
+                }}
             />
             <TouchableOpacity style={styles.button} onPress={handleAnswerSubmit}>
                 <Text style={styles.buttonText}>Submit</Text>
